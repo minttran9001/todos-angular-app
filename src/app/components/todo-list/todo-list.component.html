@@ -1,1 +1,7 @@
-<app-todo-item></app-todo-item>
+<app-todo-item
+  (editTodo)="onEditTodoContent($event)"
+  *ngFor="let todo of todo$ | async"
+  [todo]="todo"
+  (toggleStatus)="onToggleTodoStatus($event)"
+  (removeBlankTodo)="onRemoveBlankTodo($event)"
+></app-todo-item>

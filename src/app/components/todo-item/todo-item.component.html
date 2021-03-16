@@ -4,8 +4,14 @@
   (mouseout)="isHover = false"
 >
   <div class="todo d-flex align-items-center w-100">
-    <input name="checkbox" type="checkbox" class="toggle" />
-    <span for="checkbox">Item</span>
+    <input
+      [checked]="todo.isCompleted"
+      [id]="todo.id"
+      type="checkbox"
+      class="toggle"
+      (change)="toggleTodoStatus()"
+    />
+    <label [for]="todo.id">{{ todo.content }}</label>
   </div>
   <div class="d-flex align-items-center">
     <svg
@@ -25,6 +31,7 @@
       />
     </svg>
     <svg
+    (click)="removeTodo()"
       class="icon remove"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -40,6 +47,11 @@
     </svg>
   </div>
   <form class="edit-form" *ngIf="isEditing">
-    <input type="text" name="editTodo" >
+    <input
+      type="text"
+      [(ngModel)]="todo.content"
+      (keyup.enter)="onSubmit()"
+      name="editTodo"
+    />
   </form>
 </div>

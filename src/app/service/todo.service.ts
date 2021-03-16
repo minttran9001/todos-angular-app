@@ -29,7 +29,13 @@ export class TodoService {
     this.filteredTodos = [...this.todos.map((item) => ({ ...item }))];
     this.updateTodoData();
   }
-
+  toggleTodoStatus(id: number, isCompleted: boolean) {
+    const index = this.todos.findIndex((item) => item.id === id);
+    const todo = this.todos[index];
+    todo.isCompleted = isCompleted;
+    this.todos.splice(index, 1, todo);
+    this.updateToLocalStorage();
+  }
   updateToLocalStorage() {
     this._storageService.setObject(TodoService.TodoStorageKey, this.todos);
     this.filterTodos(this.currentFilter, false);
@@ -52,11 +58,27 @@ export class TodoService {
       this.updateTodoData();
     }
   }
-  addTodo(content : string){
-      const date = new Date(Date.now()).getTime()
-      const todo = new Todo(date,content);
-      this.todos.unshift(todo)
-      this.updateToLocalStorage()
+  clearCompleted() {
+    this.todos = this.todos.filter((todo) => !todo.isCompleted);
+    this.updateToLocalStorage();
+  }
+  addTodo(content: string) {
+    const date = new Date(Date.now()).getTime();
+    const todo = new Todo(date, content);
+    this.todos.unshift(todo);
+    this.updateToLocalStorage();
+  }
+  editTodoContent(id: number, content: string) {
+    const index = this.todos.findIndex((todo) => todo.id === id);
+    const editedTodo = this.todos[index];
+    editedTodo.content = content;
+    this.todos.splice(index, 1, editedTodo);
+    this.updateToLocalStorage();
+  }
+  removeTodo(id:number){
+    const index = this.todos.findIndex((todo)=> todo.id===id)
+    this.todos.splice(index,1);
+    this.updateToLocalStorage();
   }
   private updateTodoData() {
     this.displayTodoSubject.next(this.filteredTodos);
